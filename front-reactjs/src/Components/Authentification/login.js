@@ -34,7 +34,7 @@ function LoginForm({ history }) {
       .then((res) => {
         console.log(res.data);
         localStorage.setItem("user", JSON.stringify(res.data.result));
-        history.push("/class");
+        history.push("/Sujets");
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -45,13 +45,13 @@ function LoginForm({ history }) {
     <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle">
       <Grid.Column style={{ maxWidth: 450 }}>
         <Header as="h2" color="teal" textAlign="center">
-          <Image src="/logo.png" /> Log-in to your account
+          <Image src={process.env.PUBLIC_URL + "/logo512.png"} /> Log-in to your account
         </Header>
         <Form size="large">
           <Segment stacked>
             <Form.Input
               fluid
-              icon="user"
+              icon="mail"
               iconPosition="left"
               placeholder="E-mail address"
               value={email}

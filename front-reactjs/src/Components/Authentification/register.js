@@ -53,7 +53,7 @@ function RegisterForm({ history }) {
     <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle">
       <Grid.Column style={{ maxWidth: 450 }}>
         <Header as="h2" color="teal" textAlign="center">
-          <Image src="/logo.png" /> Register your account
+          <Image src={process.env.PUBLIC_URL + "/logo512.png"} /> Register your account
         </Header>
         <Form size="large">
           <Segment stacked>
@@ -67,7 +67,7 @@ function RegisterForm({ history }) {
             />
             <Form.Input
               fluid
-              icon="email"
+              icon="mail"
               iconPosition="left"
               placeholder="E-mail address"
               value={email}
@@ -84,12 +84,12 @@ function RegisterForm({ history }) {
             />
 
             <Button color="teal" fluid size="large" onClick={handleClickRegister}>
-              Login
+              Register
             </Button>
           </Segment>
         </Form>
         <Message>
-          New to us? <a href="#">Sign Up</a>
+          Already have an account? <a href="/">Sign In</a>
         </Message>
       </Grid.Column>
     </Grid>
