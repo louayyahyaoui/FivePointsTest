@@ -11,9 +11,9 @@ let Sujet = require("../models/sujet.js");
 // ADD Vote
 router.post("/", (req, res) => {
   
-    console.log(req.body);
+ 
     let newVote = new Vote({   
-      votedBy : req.body.voteddBy,
+      votedBy : req.body.votedBy,
       sujet: req.body.sujet,
       choix: req.body.choix,
       Date: Date.now(),

@@ -8,7 +8,10 @@ import {
   Header,
   Icon,
   Image,
+  Item,
+  Label,
   Message,
+  Modal,
   Segment,
 } from "semantic-ui-react";
 import { Card } from "semantic-ui-react";
@@ -18,12 +21,19 @@ import ModalAddTopic from "./ModalAddTopic";
 
 function ListSujets({ history }) {
   const [arraySujets, SetArraySujets] = useState([]);
+  const [modalDetail, SetModalDetail] = useState(false);
+  const [titre1, SetTitre] = useState("");
+  const [description1, SetDescription] = useState("");
+  const [cretedBy1, SetCretedBy] = useState("");
+
+ 
+
 
   useEffect(() => {
     axios
       .get("http://localhost:5000/sujet")
       .then((res) => {
-        console.log(res.data);
+       
         SetArraySujets(res.data);
       })
       .catch((err) => {
@@ -31,11 +41,64 @@ function ListSujets({ history }) {
       });
   }, [arraySujets]);
 
+  const logout = (e)=> {
+    localStorage.removeItem("user");
+    history.push("/");
+
+  }
+
+  const addOui = (e,sujetId,id1)=> {
+   
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user._id;
+   
+
+
+    axios
+      .post("http://localhost:5000/vote",
+      {
+        votedBy : userId,
+        sujet : sujetId,
+        choix : 1
+      })
+      .then((res) => {
+       
+       console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  }
+  const addNon = (e,sujetId,id1)=> {
+    
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user._id;
+    axios
+    .post("http://localhost:5000/vote",
+    {
+      votedBy : userId,
+      sujet : sujetId,
+      choix : 0
+    })
+    .then((res) => {
+     
+     console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+    });
+  }
+
   return (
+    <>
     <Container>
+  
+    <Button color="red" floated='right' onClick={logout}>
+            <Icon name='log out' /> Logout
+          </Button>
       <ModalAddTopic />
-      <Header as="h2" icon textAlign="center">
-        <Icon name="zip" circular />
+      <Header as="h2" icon textAlign="left">
         <Header.Content>List of topics </Header.Content>
       </Header>
 
@@ -54,31 +117,54 @@ function ListSujets({ history }) {
           </Header>
         </>
       ) : (
-        <Grid container columns={3}>
-          {arraySujets.map((topic, index) => (
-            <Grid.Column>
-              <Card key={index}>
-               
-                <Card.Content header={topic.titre} />
-                <Grid.Row>
-                  <Card.Meta>
-                    <span className="date">Oui : 50%</span>
-                  </Card.Meta>
-                  <Card.Meta>
-                    <span className="date">Non : 20%</span>
-                  </Card.Meta>
-                </Grid.Row>
-                <Card.Content description={topic.description} />
-                <Card.Content extra>
-                  <Icon name="user" />
-                  added By {topic.createdBy.fullName}
-                </Card.Content>
-              </Card>
-            </Grid.Column>
-          ))}
-        </Grid>
+       
+          arraySujets.map((topic, index) => (
+            <Item.Group divided>
+            
+        
+            <Item>
+              <Item.Image src={process.env.PUBLIC_URL + "/topic.jpg"} />
+        
+              <Item.Content>
+                <Item.Header as='a'>{topic.titre}</Item.Header>
+                <Item.Meta>
+                  <span className='cinema'>Created By {topic.createdBy.fullName}</span>
+                </Item.Meta>
+                <Item.Description>{topic.description}</Item.Description>
+                <Item.Extra>
+                <Button as='div' labelPosition='right'>
+      <Button color='red' onClick={() => addOui(topic._id,topic._id)}>
+        <Icon name='thumbs up' />
+        Like
+      </Button>
+      <Label as='a' basic color='red' pointing='left'>
+        {topic.choixOui}
+      </Label>
+    </Button>
+    <Button as='div' labelPosition='right' onClick={() => addNon(topic._id,topic._id)}>
+      <Button basic color='blue'>
+        <Icon name='thumbs down' />
+        Dislike
+      </Button>
+      <Label as='a' basic color='blue' pointing='left'>
+      {topic.choixNon}
+      </Label>
+    </Button>
+                  
+                </Item.Extra>
+              </Item.Content>
+            </Item>
+        
+          
+          </Item.Group>
+          ))
+     
       )}
     </Container>
+
+
+
+</>
   );
 }
 
