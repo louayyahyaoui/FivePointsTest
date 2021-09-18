@@ -88,4 +88,35 @@ router.post("/", (req, res) => {
   });
 
 
+  router.get("/checkVote/:id", (req, res) => {
+    let numberOfVote = 0;
+    Vote.find({ votedBy : req.params.id})
+      .then((result) => {
+        for (let i = 0; i < result.length; i++) {
+          if( i !== result.length - 1 )
+          {
+            const d1 = result[i].date;
+            const d2 = result[i+1].date;
+           if(d1.getFullYear() === d2.getFullYear() &&
+           d1.getMonth() === d2.getMonth() &&
+           d1.getDate() === d2.getDate())
+           {
+            numberOfVote ++;
+           
+           }
+          
+          }
+         
+          
+        }
+        res.json(numberOfVote);
+      })
+      .catch((err) => {
+        res
+          .status(500)
+          .json({ success: false, msg: `Something went wrong. ${err}` });
+      });
+  });
+
+
   module.exports = router;

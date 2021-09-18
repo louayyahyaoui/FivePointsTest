@@ -47,15 +47,24 @@ function ListSujets({ history }) {
 
   }
 
+  const RoundNumber = (number)=> {
+    number = String(Math.round(Number(number)));
+    return Math.round(number);
+  }
+
   const addOui = (e,sujetId,id1)=> {
    
 
     const user = JSON.parse(localStorage.getItem("user"));
     const userId = user._id;
    
-
-
     axios
+    .get("http://localhost:5000/vote/checkVote/"+userId)
+    .then((res) => {
+     console.log(res.data);
+     if(res.data + 1 < 5)
+     {
+      axios
       .post("http://localhost:5000/vote",
       {
         votedBy : userId,
@@ -69,21 +78,49 @@ function ListSujets({ history }) {
       .catch((err) => {
         console.log(err.response.data);
       });
+
+     }
+     else {
+       alert('You cant vote you achieved your 5 tentives')
+     }
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+    });
+
+    
   }
   const addNon = (e,sujetId,id1)=> {
     
+    
     const user = JSON.parse(localStorage.getItem("user"));
     const userId = user._id;
+   
     axios
-    .post("http://localhost:5000/vote",
-    {
-      votedBy : userId,
-      sujet : sujetId,
-      choix : 0
-    })
+    .get("http://localhost:5000/vote/checkVote/"+userId)
     .then((res) => {
-     
      console.log(res.data);
+     if(res.data + 1 < 5)
+     {
+      axios
+      .post("http://localhost:5000/vote",
+      {
+        votedBy : userId,
+        sujet : sujetId,
+        choix : 0
+      })
+      .then((res) => {
+       
+       console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+
+     }
+     else {
+       alert('You cant vote you achieved your 5 tentives')
+     }
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -135,10 +172,15 @@ function ListSujets({ history }) {
                 <Button as='div' labelPosition='right'>
       <Button color='red' onClick={() => addOui(topic._id,topic._id)}>
         <Icon name='thumbs up' />
-        Like
+        Like 
       </Button>
       <Label as='a' basic color='red' pointing='left'>
-        {topic.choixOui}
+        {
+        topic.choixOui + topic.choixNon == 0 ? 0 : (
+         ( RoundNumber((topic.choixOui / (topic.choixOui + topic.choixNon)) * 100) )
+        )
+        } %
+      
       </Label>
     </Button>
     <Button as='div' labelPosition='right' onClick={() => addNon(topic._id,topic._id)}>
@@ -147,7 +189,11 @@ function ListSujets({ history }) {
         Dislike
       </Button>
       <Label as='a' basic color='blue' pointing='left'>
-      {topic.choixNon}
+      {
+        topic.choixOui + topic.choixNon == 0 ? 0 : (
+         ( RoundNumber((topic.choixNon / (topic.choixOui + topic.choixNon)) * 100) )
+        )
+        } %
       </Label>
     </Button>
                   
