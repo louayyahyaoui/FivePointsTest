@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
+  Container,
   Divider,
   Form,
   Grid,
@@ -13,27 +14,26 @@ import {
 import { Card } from "semantic-ui-react";
 
 import axios from "axios";
+import ModalAddTopic from "./ModalAddTopic";
 
 function ListSujets({ history }) {
   const [arraySujets, SetArraySujets] = useState([]);
 
-
- useEffect(() => {
+  useEffect(() => {
     axios
-    .get("http://localhost:5000/sujets"
-    )
-    .then((res) => {
-      console.log(res.data);
-      SetArraySujets(res.data)
-    })
-    .catch((err) => {
-      console.log(err.response.data);
-    });
- }, [])
-
+      .get("http://localhost:5000/sujet")
+      .then((res) => {
+        console.log(res.data);
+        SetArraySujets(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  }, [arraySujets]);
 
   return (
-    <>
+    <Container>
+      <ModalAddTopic />
       <Header as="h2" icon textAlign="center">
         <Icon name="zip" circular />
         <Header.Content>List of topics </Header.Content>
@@ -41,45 +41,44 @@ function ListSujets({ history }) {
 
       <Divider hidden />
 
-      <Grid container columns={3}>
-        <Grid.Column>
-          <Card>
-            <Card.Content header="About Amy" />
-            <Card.Content
-              description="'Amy is a violinist with 2 years experience in the wedding industry.',
-  'She enjoys the outdoors and currently resides in upstate New York.'"
-            />
-            <Card.Content extra>
-              <Icon name="user" />4 Friends
-            </Card.Content>
-          </Card>
-        </Grid.Column>
-        <Grid.Column>
-          <Card>
-            <Card.Content header="About Amy" />
-            <Card.Content
-              description="'Amy is a violinist with 2 years experience in the wedding industry.',
-  'She enjoys the outdoors and currently resides in upstate New York.'"
-            />
-            <Card.Content extra>
-              <Icon name="user" />4 Friends
-            </Card.Content>
-          </Card>
-        </Grid.Column>
-        <Grid.Column>
-          <Card>
-            <Card.Content header="About Amy" />
-            <Card.Content
-              description="'Amy is a violinist with 2 years experience in the wedding industry.',
-  'She enjoys the outdoors and currently resides in upstate New York.'"
-            />
-            <Card.Content extra>
-              <Icon name="user" />4 Friends
-            </Card.Content>
-          </Card>
-        </Grid.Column>
-      </Grid>
-    </>
+      {arraySujets.length === 0 ? (
+        <>
+          <br />
+          <Image
+            centered
+            size="medium"
+            src={process.env.PUBLIC_URL + "/logo512.png"}
+          />
+          <Header as="h4" textAlign="center">
+            <Header.Content>No Topics found </Header.Content>
+          </Header>
+        </>
+      ) : (
+        <Grid container columns={3}>
+          {arraySujets.map((topic, index) => (
+            <Grid.Column>
+              <Card key={index}>
+               
+                <Card.Content header={topic.titre} />
+                <Grid.Row>
+                  <Card.Meta>
+                    <span className="date">Oui : 50%</span>
+                  </Card.Meta>
+                  <Card.Meta>
+                    <span className="date">Non : 20%</span>
+                  </Card.Meta>
+                </Grid.Row>
+                <Card.Content description={topic.description} />
+                <Card.Content extra>
+                  <Icon name="user" />
+                  added By {topic.createdBy.fullName}
+                </Card.Content>
+              </Card>
+            </Grid.Column>
+          ))}
+        </Grid>
+      )}
+    </Container>
   );
 }
 
