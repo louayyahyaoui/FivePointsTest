@@ -42,10 +42,12 @@ router.post("/register", (req, res) => {
 
 
   // LOGIN
-router.get("/login", (req, res) => {
-  
+router.post("/login", (req, res) => {
+  console.log(req.body);
    const email = req.body.email;
    const password = req.body.password;
+ 
+
    User.findOne({ email: email })
  
       .then((result) => {
