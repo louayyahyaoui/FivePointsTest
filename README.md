@@ -3,7 +3,7 @@
 
 ## :wrench: Installation & Usage
 
-- Clone the Master branch
+- Clone the Main branch
 - Go to Client directory by typing "cd Back_nodeJS" and run "npm install"
 - Go to Server directory by typing "cd front_reactjs" and run "npm install"
 - Run "npm start" in the server directory
