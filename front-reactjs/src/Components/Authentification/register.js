@@ -33,7 +33,12 @@ function RegisterForm({ history }) {
   };
 
   const handleClickRegister = () => {
-    axios
+    if(!email || !password  || !fullName)
+    {
+      alert('Please enter your email | password | fullName')
+    }
+    else {
+      axios
       .post("http://localhost:5000/user/register", {
         email: email,
         password: password,
@@ -47,6 +52,8 @@ function RegisterForm({ history }) {
       .catch((err) => {
         console.log(err.response.data);
       });
+    }
+    
   };
 
   return (

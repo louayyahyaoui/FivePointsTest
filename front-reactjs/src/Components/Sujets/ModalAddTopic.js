@@ -22,8 +22,12 @@ function ModalAddTopic() {
       const AddTopic = (e, form) => {
         const user = JSON.parse(localStorage.getItem("user"));
         const userId = user._id;
-        
-        e.preventDefault();
+        if(!titre || !description)
+        {
+            alert("Please enter a description | title")
+        }
+        else {
+            e.preventDefault();
         axios
       .post("http://localhost:5000/sujet", {
         titre: titre,
@@ -45,6 +49,8 @@ function ModalAddTopic() {
         SetFormClassName("warning");
         SetFormSuccessMessage(err.response.data);
       });
+        }
+        
 
       };
 

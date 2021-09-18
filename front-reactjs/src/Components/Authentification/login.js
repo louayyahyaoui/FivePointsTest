@@ -26,26 +26,40 @@ function LoginForm({ history }) {
   };
 
   const handleClickLogin = () => {
-    axios
+    if(!email || !password) {
+      alert('Please enter your email | password')
+    }
+    else {
+      axios
       .post("http://localhost:5000/user/login", {
         email: email,
         password: password,
       })
       .then((res) => {
         console.log(res.data);
-        localStorage.setItem("user", JSON.stringify(res.data.result));
-        history.push("/Sujets");
+        if (res.data.success === false) {
+          alert("check your password and try again !");
+        }
+        if (res.data.success === true) {
+          localStorage.setItem("user", JSON.stringify(res.data.result));
+          history.push("/Sujets");
+        }
+       
       })
       .catch((err) => {
         console.log(err.response.data);
+        alert(err.response.data)
       });
+    }
+    
   };
 
   return (
     <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle">
       <Grid.Column style={{ maxWidth: 450 }}>
         <Header as="h2" color="teal" textAlign="center">
-          <Image src={process.env.PUBLIC_URL + "/logo512.png"} /> Log-in to your account
+          <Image src={process.env.PUBLIC_URL + "/logo512.png"} /> Log-in to your
+          account
         </Header>
         <Form size="large">
           <Segment stacked>
