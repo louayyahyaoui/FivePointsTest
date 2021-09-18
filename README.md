@@ -4,10 +4,10 @@
 ## :wrench: Installation & Usage
 
 - Clone the Master branch
-- Go to Client directory by typing "cd Client" and run "npm install"
-- Go to Server directory by typing "cd Server" and run "npm install"
-- Run "node server.js" in the server directory
-- Run "npm run start" in the client directory
+- Go to Client directory by typing "cd Back_nodeJS" and run "npm install"
+- Go to Server directory by typing "cd front_reactjs" and run "npm install"
+- Run "npm start" in the server directory
+- Run "npm start" in the client directory
 - Go to http://localhost:3000 and Enjoy ;)
 
 ## :bulb: Devoloped With MERN stack
